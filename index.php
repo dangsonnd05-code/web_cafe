@@ -4,8 +4,8 @@ session_start();
 /* =========================
    KẾT NỐI DATABASE
 ========================= */
-require_once __DIR__ . '/db/connect_master.php';
-require_once __DIR__ . '/db/connect_order.php';
+require_once __DIR__ . '/connect_master.php';
+require_once __DIR__ . '/connect_order.php';
 
 /* =========================
    LẤY MENU TỪ DATABASE
@@ -210,3 +210,4 @@ foreach ($_SESSION['cart'] as $id => $qty):
 
 </body>
 </html>
+
