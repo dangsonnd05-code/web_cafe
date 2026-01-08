@@ -60,32 +60,31 @@ if (isset($_POST['checkout'])) {
         $total += $products[$id]['price'] * $qty;
     }
 
-    // Lưu đơn hàng vào cafe_order
+    // ✅ LẤY USER ĐANG ĐĂNG NHẬP
+    $user_id = $_SESSION['user']['id'];
+
+    // ✅ LƯU ĐƠN HÀNG
     mysqli_query($conn_order, "
-        $user_id = $_SESSION['user']['id'];
-
-mysqli_query($conn_order, "
-    INSERT INTO orders(customer_id,total,status) 
-    VALUES ($user_id,$total,'Hoàn thành')
-");
-
+        INSERT INTO orders(customer_id,total,status) 
+        VALUES ($user_id, $total, 'Hoàn thành')
     ");
 
     $order_id = mysqli_insert_id($conn_order);
 
-    // Lưu chi tiết đơn
+    // ✅ LƯU CHI TIẾT ĐƠN
     foreach ($_SESSION['cart'] as $id => $qty) {
         $price = $products[$id]['price'];
 
         mysqli_query($conn_order, "
             INSERT INTO order_items(order_id,product_id,price,qty)
-            VALUES ($order_id,$id,$price,$qty)
+            VALUES ($order_id, $id, $price, $qty)
         ");
     }
 
     $_SESSION['cart'] = [];
     echo "<script>alert('Thanh toán thành công! ☕');</script>";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -225,6 +224,7 @@ foreach ($_SESSION['cart'] as $id => $qty):
 
 </body>
 </html>
+
 
 
 
