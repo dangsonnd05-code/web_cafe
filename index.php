@@ -1,9 +1,13 @@
 <?php
 session_start();
-
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit;
+}
 /* =========================
    KẾT NỐI DATABASE
 ========================= */
+require_once __DIR__ . '/connect_user.php';
 require_once __DIR__ . '/connect_master.php';
 require_once __DIR__ . '/connect_order.php';
 
@@ -58,8 +62,13 @@ if (isset($_POST['checkout'])) {
 
     // Lưu đơn hàng vào cafe_order
     mysqli_query($conn_order, "
-        INSERT INTO orders(total,status) 
-        VALUES ($total,'Hoàn thành')
+        $user_id = $_SESSION['user']['id'];
+
+mysqli_query($conn_order, "
+    INSERT INTO orders(customer_id,total,status) 
+    VALUES ($user_id,$total,'Hoàn thành')
+");
+
     ");
 
     $order_id = mysqli_insert_id($conn_order);
@@ -152,6 +161,12 @@ footer {
 
 <header>
     ☕ KIOH COFFEE – ĐẶT ĐỒ UỐNG TRỰC TUYẾN
+   <div style="font-size:14px;margin-top:5px;">
+    Xin chào <?= $_SESSION['user']['name'] ?> |
+    <a href="order_history.php" style="color:white;">📜 Lịch sử</a> |
+    <a href="logout.php" style="color:white;">🚪 Đăng xuất</a>
+</div>
+
 </header>
 
 <div class="container">
@@ -210,5 +225,6 @@ foreach ($_SESSION['cart'] as $id => $qty):
 
 </body>
 </html>
+
 
 
